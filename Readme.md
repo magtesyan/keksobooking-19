@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
-* Студент: [Mikael Magtesyan](https://up.htmlacademy.ru/javascript/19/user/1100875).
-* Наставник: `Неизвестно`.
+* Студент: [Mikael Magtesyan](https://htmlacademy.ru/profile/id1100875).
+* Наставник: [Артём Матковский](https://htmlacademy.ru/profile/id1151767).
 
 ---
 
