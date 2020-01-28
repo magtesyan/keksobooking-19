@@ -37,6 +37,7 @@ var generateAds = function (n) {
   var features = shuffle(OFFER_FEATURES);
 
   for (var i = 0; i < n; i++) {
+    var addressCoordinates = [randomDigitFromTo(130, 930), randomDigitFromTo(130, 630)];
     adsArr[i] = {
       author: {
         avatar: 'img/avatars/user0' + avatar[i] + '.png'
@@ -44,7 +45,7 @@ var generateAds = function (n) {
 
       offer: {
         title: title[i],
-        address: randomDigitFromTo(1, 650) + ', ' + randomDigitFromTo(1, 350),
+        address: addressCoordinates[0] + ', ' + addressCoordinates[1],
         price: randomDigitFromTo(0, 1000000),
         type: OFFER_TYPE[randomDigitFromTo(0, 3)],
         rooms: randomDigitFromTo(1, 5),
@@ -57,8 +58,8 @@ var generateAds = function (n) {
       },
 
       location: {
-        x: randomDigitFromTo(130, 930),
-        y: randomDigitFromTo(130, 630)
+        x: addressCoordinates[0],
+        y: addressCoordinates[1]
       }
     };
   }
