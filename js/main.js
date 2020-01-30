@@ -53,9 +53,9 @@ var generateAds = function (n) {
         guests: randomDigitFromTo(1, 5),
         checkin: OFFER_CHECKIN[randomDigitFromTo(0, 2)],
         checkout: OFFER_CHECKOUT[randomDigitFromTo(0, 2)],
-        features: features.slice(randomDigitFromTo(1, 7)),
+        features: features.slice(randomDigitFromTo(0, 7)),
         description: OFFER_DESCRIPTION[randomDigitFromTo(0, 7)],
-        photos: OFFER_PHOTOS.slice(randomDigitFromTo(1, 3))
+        photos: OFFER_PHOTOS.slice(randomDigitFromTo(0, 2))
       },
 
       location: {
