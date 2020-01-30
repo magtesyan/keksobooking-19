@@ -3,7 +3,8 @@
 var mapBlock = document.querySelector('.map');
 mapBlock.classList.remove('map--faded');
 var pinTemplate = document.querySelector('#pin').content.querySelector('button');
-var similarListElement = document.querySelector('.map__pins');
+var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+var mapPinElement = document.querySelector('.map__pins');
 
 var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -11,7 +12,7 @@ var OFFER_CHECKIN = ['12:00', '13:00', '14:00'];
 var OFFER_CHECKOUT = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var OFFER_TITLE = ['Квартира в новостройке', 'Лофт на первом этаже', 'Студия в хрущевке', 'Апартаменты недорого', 'Таунхаус в центре', 'Частный дом в пригороде', 'Пентхаус в БЦ', 'Коттедж в парке'];
-var OFFER_DESCRIPTION = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+var OFFER_DESCRIPTION = ['desc1', 'desc2', 'desc3', 'desc4', 'desc5', 'desc6', 'desc7', 'desc8'];
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var randomDigitFromTo = function (min, max) {
@@ -76,12 +77,73 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
+var renderCard = function (adsArr) {
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = adsArr.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = adsArr.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = adsArr.offer.price + '₽/ночь';
+
+  var offerType;
+  switch (adsArr.offer.type) {
+    case 'palace' : offerType = 'Дворец'; break;
+    case 'house' : offerType = 'Дом'; break;
+    case 'flat' : offerType = 'Квартира'; break;
+    case 'bungalo' : offerType = 'Бунгало';
+  }
+
+  cardElement.querySelector('.popup__type').textContent = offerType;
+  cardElement.querySelector('.popup__text--capacity').textContent = adsArr.offer.rooms + ' комнаты для ' + adsArr.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
+
+  var features = cardElement.querySelector('.popup__features');
+  while (features.firstChild) {
+    features.removeChild(features.firstChild);
+  }
+  for (var i = 0; i < adsArr.offer.features.length; i++) {
+    var newChild = document.createElement('li');
+    newChild.className = 'popup__feature';
+    newChild.classList.add('popup__feature--' + adsArr.offer.features[i]);
+    features.appendChild(newChild);
+  }
+
+  cardElement.querySelector('.popup__description').textContent = adsArr.offer.description;
+
+  var photos = cardElement.querySelector('.popup__photos');
+  while (photos.firstChild) {
+    photos.removeChild(photos.firstChild);
+  }
+
+  for (i = 0; i < adsArr.offer.photos.length; i++) {
+    newChild = document.createElement('img');
+    newChild.className = 'popup__photo';
+    newChild.setAttribute('src', adsArr.offer.photos[i]);
+    newChild.setAttribute('width', 45);
+    newChild.setAttribute('height', 40);
+    newChild.setAttribute('alt', 'Фотография жилья');
+    photos.appendChild(newChild);
+  }
+
+  cardElement.querySelector('.popup__avatar').src = adsArr.author.avatar;
+  return cardElement;
+};
+
 var addPin = function (adsArr) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsArr.length; i++) {
     fragment.appendChild(renderPin(adsArr[i]));
   }
-  similarListElement.appendChild(fragment);
+  mapPinElement.appendChild(fragment);
+  addCard(adsArr);
+};
+
+var addCard = function (adsArr) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adsArr.length; i++) {
+    fragment.appendChild(renderCard(adsArr[i]));
+  }
+  var filtersContainerBlock = mapBlock.querySelector('.map__filters-container');
+  mapBlock.insertBefore(fragment, filtersContainerBlock);
 };
 
 addPin(generateAds(8));
