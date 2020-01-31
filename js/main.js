@@ -15,6 +15,13 @@ var OFFER_TITLE = ['Квартира в новостройке', 'Лофт на 
 var OFFER_DESCRIPTION = ['desc1', 'desc2', 'desc3', 'desc4', 'desc5', 'desc6', 'desc7', 'desc8'];
 var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+var HousingTypes = {
+  palace: 'Дворец',
+  house: 'Дом',
+  flat: 'Квартира',
+  bungalo: 'Бунгало'
+};
+
 var randomDigitFromTo = function (min, max) {
   return Math.round(Math.random() * (max - min) + min);
 };
@@ -106,14 +113,7 @@ var renderCard = function (adsArr) {
   cardElement.querySelector('.popup__text--address').textContent = adsArr.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = adsArr.offer.price + '₽/ночь';
 
-  var housingTypes = {
-    palace: 'Дворец',
-    house: 'Дом',
-    flat: 'Квартира',
-    bungalo: 'Бунгало'
-  };
-
-  cardElement.querySelector('.popup__type').textContent = housingTypes[adsArr.offer.type];
+  cardElement.querySelector('.popup__type').textContent = HousingTypes[adsArr.offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = adsArr.offer.rooms + ' комнаты для ' + adsArr.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
