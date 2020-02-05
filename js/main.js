@@ -1,10 +1,19 @@
 'use strict';
 
+var ENTER_KEY = 'Enter';
+
 var mapBlock = document.querySelector('.map');
-mapBlock.classList.remove('map--faded');
+var adForm = document.querySelector('.ad-form');
+var mapFiltersForm = document.querySelector('.map__filters');
 var pinTemplate = document.querySelector('#pin').content.querySelector('button');
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapPinElement = document.querySelector('.map__pins');
+var mapPinMain = mapPinElement.querySelector('.map__pin--main');
+var inputsAndSelects = document.querySelectorAll('input, select, .ad-form fieldset');
+var addressInputField = adForm.querySelector('#address');
+var guestsNumberSelect = adForm.querySelector('#capacity');
+var roomsNumberSelect = adForm.querySelector('#room_number');
+var submitBtn = adForm.querySelector('.ad-form__submit');
 
 var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -20,6 +29,36 @@ var HousingTypes = {
   house: 'Дом',
   flat: 'Квартира',
   bungalo: 'Бунгало'
+};
+
+var disactivatePage = function () {
+  for (var i = 0; i < inputsAndSelects.length; i++) {
+    inputsAndSelects[i].setAttribute('disabled', '');
+  }
+  if (!mapBlock.classList.contains('map--faded')) {
+    mapBlock.classList.add('map--faded');
+  }
+  if (!adForm.classList.contains('ad-form--disabled')) {
+    adForm.classList.add('map--faded');
+  }
+  if (!mapFiltersForm.classList.contains('map__filters--disabled')) {
+    mapFiltersForm.classList.add('map--faded');
+  }
+};
+
+var activatePage = function () {
+  for (var i = 0; i < inputsAndSelects.length; i++) {
+    inputsAndSelects[i].removeAttribute('disabled');
+  }
+  if (mapBlock.classList.contains('map--faded')) {
+    mapBlock.classList.remove('map--faded');
+  }
+  if (adForm.classList.contains('ad-form--disabled')) {
+    adForm.classList.remove('ad-form--disabled');
+  }
+  if (mapFiltersForm.classList.contains('map__filters--disabled')) {
+    mapFiltersForm.classList.remove('map__filters--disabled');
+  }
 };
 
 var randomDigitFromTo = function (min, max) {
@@ -141,5 +180,51 @@ var addCard = function (adsArr) {
   var filtersContainerBlock = mapBlock.querySelector('.map__filters-container');
   mapBlock.insertBefore(fragment, filtersContainerBlock);
 };
+
+var getElementCenter = function (element) {
+  var coordinates = element.getBoundingClientRect();
+  return (Math.round((coordinates.right - coordinates.left) / 2 + coordinates.left) + ', ' + Math.round((coordinates.bottom - coordinates.top) / 2 + coordinates.top));
+};
+
+var getElementBottom = function (element) {
+  var coordinates = element.getBoundingClientRect();
+  return (Math.round((coordinates.right - coordinates.left) / 2 + coordinates.left) + ', ' + Math.round(coordinates.bottom));
+};
+
+var validateRoomsAndGuests = function (rooms, guests) {
+  var roomsNumber = rooms.value;
+  var guestsNumber = guests.value;
+  rooms.addEventListener('change', function () {
+    roomsNumber = rooms.value;
+  });
+  guests.addEventListener('change', function () {
+    guestsNumber = guests.value;
+  });
+  if ((guestsNumber <= roomsNumber && roomsNumber !== 100 && guestsNumber > 0) || (roomsNumber === 100 && guestsNumber === 0)) {
+    guests.setCustomValidity('');
+  } else {
+    guests.setCustomValidity('Количество гостей не соответствует количеству комнат');
+  }
+};
+
+disactivatePage();
+addressInputField.value = getElementCenter(mapPinMain);
+submitBtn.addEventListener('click', function () {
+  validateRoomsAndGuests(roomsNumberSelect, guestsNumberSelect);
+});
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    activatePage();
+    addressInputField.value = getElementBottom(mapPinMain);
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    activatePage();
+    addressInputField.value = getElementBottom(mapPinMain);
+  }
+});
 
 addPin(generateAds(8));
