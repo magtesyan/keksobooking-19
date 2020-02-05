@@ -14,6 +14,8 @@ var addressInputField = adForm.querySelector('#address');
 var guestsNumberSelect = adForm.querySelector('#capacity');
 var roomsNumberSelect = adForm.querySelector('#room_number');
 var submitBtn = adForm.querySelector('.ad-form__submit');
+var roomsNumber = roomsNumberSelect.value;
+var guestsNumber = guestsNumberSelect.value;
 
 var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -192,14 +194,6 @@ var getElementBottom = function (element) {
 };
 
 var validateRoomsAndGuests = function (rooms, guests) {
-  var roomsNumber = rooms.value;
-  var guestsNumber = guests.value;
-  rooms.addEventListener('change', function () {
-    roomsNumber = rooms.value;
-  });
-  guests.addEventListener('change', function () {
-    guestsNumber = guests.value;
-  });
   if ((guestsNumber <= roomsNumber && roomsNumber !== 100 && guestsNumber > 0) || (roomsNumber === 100 && guestsNumber === 0)) {
     guests.setCustomValidity('');
   } else {
@@ -209,6 +203,14 @@ var validateRoomsAndGuests = function (rooms, guests) {
 
 disactivatePage();
 addressInputField.value = getElementCenter(mapPinMain);
+
+roomsNumberSelect.addEventListener('change', function () {
+  roomsNumber = roomsNumberSelect.value;
+});
+guestsNumberSelect.addEventListener('change', function () {
+  guestsNumber = guestsNumberSelect.value;
+});
+
 submitBtn.addEventListener('click', function () {
   validateRoomsAndGuests(roomsNumberSelect, guestsNumberSelect);
 });
