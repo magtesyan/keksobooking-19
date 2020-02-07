@@ -1,6 +1,7 @@
 'use strict';
 
 var ENTER_KEY = 'Enter';
+var ESC = 'Escape';
 
 var mapBlock = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
@@ -9,13 +10,21 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('button')
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapPinElement = document.querySelector('.map__pins');
 var mapPinMain = mapPinElement.querySelector('.map__pin--main');
-var inputsAndSelects = document.querySelectorAll('input, select, .ad-form fieldset');
+var inputsAndSelects = document.querySelectorAll('input:not(#address), select, .ad-form fieldset');
 var addressInputField = adForm.querySelector('#address');
 var guestsNumberSelect = adForm.querySelector('#capacity');
 var roomsNumberSelect = adForm.querySelector('#room_number');
+var offerTypeSelect = adForm.querySelector('#type');
+var priceSelect = adForm.querySelector('#price');
+var timeInSelect = adForm.querySelector('#timein');
+var timeOutSelect = adForm.querySelector('#timeout');
+var userPhotoInput = adForm.querySelector('#avatar');
+var offerImagesInput = adForm.querySelector('#images');
 var submitBtn = adForm.querySelector('.ad-form__submit');
 var roomsNumber = roomsNumberSelect.value;
 var guestsNumber = guestsNumberSelect.value;
+var offerType = offerTypeSelect.value;
+var timeIn = timeInSelect.value;
 
 var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -31,6 +40,13 @@ var HousingTypes = {
   house: 'Дом',
   flat: 'Квартира',
   bungalo: 'Бунгало'
+};
+
+var HousingTypesMinPrice = {
+  palace: 10000,
+  house: 5000,
+  flat: 1000,
+  bungalo: 0
 };
 
 var disactivatePage = function () {
@@ -162,6 +178,7 @@ var renderCard = function (adsArr) {
   cardElement.querySelector('.popup__description').textContent = adsArr.offer.description;
   addPhotos(adsArr.offer.photos, cardElement.querySelector('.popup__photos'));
   cardElement.querySelector('.popup__avatar').src = adsArr.author.avatar;
+  cardElement.classList.add('hidden');
   return cardElement;
 };
 
@@ -201,18 +218,52 @@ var validateRoomsAndGuests = function (rooms, guests) {
   }
 };
 
+var openCard = function (evt) {
+  closeCard();
+  if (evt.srcElement.getAttribute('src')) {
+    mapBlock.querySelector('article img[src="' + evt.srcElement.getAttribute('src') + '"]').parentNode.classList.remove('hidden');
+  } else {
+    mapBlock.querySelector('article img[src="' + evt.srcElement.querySelector('img').getAttribute('src') + '"]').parentNode.classList.remove('hidden');
+  }
+};
+
+var closeCard = function () {
+  for (var i = 0; i < mapBlock.querySelectorAll('article').length; i++) {
+    mapBlock.querySelectorAll('article')[i].classList.add('hidden');
+  }
+};
+
 disactivatePage();
 addressInputField.value = getElementCenter(mapPinMain);
 
-roomsNumberSelect.addEventListener('change', function () {
+adForm.addEventListener('change', function () {
   roomsNumber = roomsNumberSelect.value;
-});
-guestsNumberSelect.addEventListener('change', function () {
   guestsNumber = guestsNumberSelect.value;
+  offerType = offerTypeSelect.value;
+
+  if (timeInSelect.value !== timeOutSelect.value) {
+    if (timeInSelect.value !== timeIn) {
+      timeOutSelect.value = timeInSelect.value;
+    } else {
+      timeInSelect.value = timeOutSelect.value;
+    }
+    timeIn = timeInSelect.value;
+  }
+
+  var userPhoto = userPhotoInput.files[0];
+  if (!userPhoto.type.match(/image\/(jpeg|jpg|png|gif)/)) {
+    userPhotoInput.setCustomValidity('Загруженный файл не является фотографией');
+  }
+
+  var offerPhoto = offerImagesInput.files[0];
+  if (!offerPhoto.type.match(/image\/(jpeg|jpg|png|gif)/)) {
+    offerImagesInput.setCustomValidity('Загруженный файл не является фотографией');
+  }
 });
 
 submitBtn.addEventListener('click', function () {
   validateRoomsAndGuests(roomsNumberSelect, guestsNumberSelect);
+  priceSelect.setAttribute('min', HousingTypesMinPrice[offerType]);
 });
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -230,3 +281,19 @@ mapPinMain.addEventListener('keydown', function (evt) {
 });
 
 addPin(generateAds(8));
+
+mapPinElement.addEventListener('click', function (evt) {
+  openCard(evt);
+});
+
+mapPinElement.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    openCard(evt);
+  }
+});
+
+mapPinElement.addEventListener('keydown', function (evt) {
+  if (evt.key === ESC) {
+    closeCard();
+  }
+});
