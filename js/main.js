@@ -25,6 +25,7 @@ var roomsNumber = roomsNumberSelect.value;
 var guestsNumber = guestsNumberSelect.value;
 var offerType = offerTypeSelect.value;
 var timeIn = timeInSelect.value;
+var adsArr = [];
 
 var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
@@ -96,7 +97,6 @@ var shuffle = function (arr) {
 };
 
 var generateAds = function (n) {
-  var adsArr = new Array(n);
   var avatar = shuffle(OFFER_USER_AVATAR);
   var title = shuffle(OFFER_TITLE);
   var features = shuffle(OFFER_FEATURES);
@@ -164,37 +164,37 @@ var addPhotos = function (arr, photos) {
   }
 };
 
-var renderCard = function (adsArr) {
+var renderCard = function (arr) {
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = adsArr.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = adsArr.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = adsArr.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__title').textContent = arr.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = arr.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = arr.offer.price + '₽/ночь';
 
-  cardElement.querySelector('.popup__type').textContent = HousingTypes[adsArr.offer.type];
-  cardElement.querySelector('.popup__text--capacity').textContent = adsArr.offer.rooms + ' комнаты для ' + adsArr.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
-  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + adsArr.offer.checkin + ', выезд до ' + adsArr.offer.checkout;
-  addFeatures(adsArr.offer.features, cardElement.querySelector('.popup__features'));
-  cardElement.querySelector('.popup__description').textContent = adsArr.offer.description;
-  addPhotos(adsArr.offer.photos, cardElement.querySelector('.popup__photos'));
-  cardElement.querySelector('.popup__avatar').src = adsArr.author.avatar;
-  cardElement.classList.add('hidden');
+  cardElement.querySelector('.popup__type').textContent = HousingTypes[arr.offer.type];
+  cardElement.querySelector('.popup__text--capacity').textContent = arr.offer.rooms + ' комнаты для ' + arr.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + arr.offer.checkin + ', выезд до ' + arr.offer.checkout;
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + arr.offer.checkin + ', выезд до ' + arr.offer.checkout;
+  addFeatures(arr.offer.features, cardElement.querySelector('.popup__features'));
+  cardElement.querySelector('.popup__description').textContent = arr.offer.description;
+  addPhotos(arr.offer.photos, cardElement.querySelector('.popup__photos'));
+  cardElement.querySelector('.popup__avatar').src = arr.author.avatar;
   return cardElement;
 };
 
-var addPin = function (adsArr) {
+var addPin = function (arr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adsArr.length; i++) {
-    fragment.appendChild(renderPin(adsArr[i]));
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(renderPin(arr[i]));
   }
   mapPinElement.appendChild(fragment);
-  addCard(adsArr);
 };
 
-var addCard = function (adsArr) {
+var addCard = function (marker, arr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adsArr.length; i++) {
-    fragment.appendChild(renderCard(adsArr[i]));
+  for (var i = 0; i < arr.length; i++) {
+    if (marker === arr[i].author.avatar) {
+      fragment.appendChild(renderCard(adsArr[i]));
+    }
   }
   var filtersContainerBlock = mapBlock.querySelector('.map__filters-container');
   mapBlock.insertBefore(fragment, filtersContainerBlock);
@@ -215,15 +215,6 @@ var validateRoomsAndGuests = function (rooms, guests) {
     guests.setCustomValidity('');
   } else {
     guests.setCustomValidity('Количество гостей не соответствует количеству комнат');
-  }
-};
-
-var openCard = function (evt) {
-  closeCard();
-  if (evt.srcElement.getAttribute('src')) {
-    mapBlock.querySelector('article img[src="' + evt.srcElement.getAttribute('src') + '"]').parentNode.classList.remove('hidden');
-  } else {
-    mapBlock.querySelector('article img[src="' + evt.srcElement.querySelector('img').getAttribute('src') + '"]').parentNode.classList.remove('hidden');
   }
 };
 
@@ -283,12 +274,12 @@ mapPinMain.addEventListener('keydown', function (evt) {
 addPin(generateAds(8));
 
 mapPinElement.addEventListener('click', function (evt) {
-  openCard(evt);
+  addCard(evt.target.getAttribute('src'), adsArr);
 });
 
 mapPinElement.addEventListener('keydown', function (evt) {
   if (evt.key === ENTER_KEY) {
-    openCard(evt);
+    addCard(evt.target.getAttribute('src'), adsArr);
   }
 });
 
