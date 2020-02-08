@@ -220,7 +220,7 @@ var validateRoomsAndGuests = function (rooms, guests) {
 
 var closeCard = function () {
   for (var i = 0; i < mapBlock.querySelectorAll('article').length; i++) {
-    mapBlock.querySelectorAll('article')[i].classList.add('hidden');
+    mapBlock.querySelectorAll('article')[i].remove();
   }
 };
 
@@ -283,7 +283,6 @@ mapPinElement.addEventListener('click', function (evt) {
 });
 
 mapPinElement.addEventListener('keydown', function (evt) {
-  closeCard();
   if (evt.key === ENTER_KEY) {
     if (evt.target.getAttribute('src')) {
       addCard(evt.target.getAttribute('src'), adsArr);
