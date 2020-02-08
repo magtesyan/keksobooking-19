@@ -274,12 +274,22 @@ mapPinMain.addEventListener('keydown', function (evt) {
 addPin(generateAds(8));
 
 mapPinElement.addEventListener('click', function (evt) {
-  addCard(evt.target.getAttribute('src'), adsArr);
+  closeCard();
+  if (evt.target.getAttribute('src')) {
+    addCard(evt.target.getAttribute('src'), adsArr);
+  } else {
+    addCard(evt.target.querySelector('img').getAttribute('src'), adsArr);
+  }
 });
 
 mapPinElement.addEventListener('keydown', function (evt) {
+  closeCard();
   if (evt.key === ENTER_KEY) {
-    addCard(evt.target.getAttribute('src'), adsArr);
+    if (evt.target.getAttribute('src')) {
+      addCard(evt.target.getAttribute('src'), adsArr);
+    } else {
+      addCard(evt.target.querySelector('img').getAttribute('src'), adsArr);
+    }
   }
 });
 
