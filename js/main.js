@@ -1,5 +1,14 @@
 'use strict';
 
+var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
+var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var OFFER_CHECKIN = ['12:00', '13:00', '14:00'];
+var OFFER_CHECKOUT = ['12:00', '13:00', '14:00'];
+var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var OFFER_TITLE = ['Квартира в новостройке', 'Лофт на первом этаже', 'Студия в хрущевке', 'Апартаменты недорого', 'Таунхаус в центре', 'Частный дом в пригороде', 'Пентхаус в БЦ', 'Коттедж в парке'];
+var OFFER_DESCRIPTION = ['desc1', 'desc2', 'desc3', 'desc4', 'desc5', 'desc6', 'desc7', 'desc8'];
+var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+
 var ENTER_KEY = 'Enter';
 var ESC = 'Escape';
 
@@ -26,15 +35,6 @@ var guestsNumber = guestsNumberSelect.value;
 var offerType = offerTypeSelect.value;
 var timeIn = timeInSelect.value;
 var adsArr = [];
-
-var OFFER_USER_AVATAR = [1, 2, 3, 4, 5, 6, 7, 8];
-var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var OFFER_CHECKIN = ['12:00', '13:00', '14:00'];
-var OFFER_CHECKOUT = ['12:00', '13:00', '14:00'];
-var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var OFFER_TITLE = ['Квартира в новостройке', 'Лофт на первом этаже', 'Студия в хрущевке', 'Апартаменты недорого', 'Таунхаус в центре', 'Частный дом в пригороде', 'Пентхаус в БЦ', 'Коттедж в парке'];
-var OFFER_DESCRIPTION = ['desc1', 'desc2', 'desc3', 'desc4', 'desc5', 'desc6', 'desc7', 'desc8'];
-var OFFER_PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
 var HousingTypes = {
   palace: 'Дворец',
@@ -219,8 +219,8 @@ var validateRoomsAndGuests = function (rooms, guests) {
 };
 
 var closeCard = function () {
-  for (var i = 0; i < mapBlock.querySelectorAll('article').length; i++) {
-    mapBlock.querySelectorAll('article')[i].remove();
+  if (mapBlock.querySelector('article')) {
+    mapBlock.querySelector('article').remove();
   }
 };
 
@@ -240,6 +240,8 @@ adForm.addEventListener('change', function () {
     }
     timeIn = timeInSelect.value;
   }
+
+  priceSelect.placeholder = HousingTypesMinPrice[offerType];
 
   var userPhoto = userPhotoInput.files[0];
   if (!userPhoto.type.match(/image\/(jpeg|jpg|png|gif)/)) {
@@ -261,6 +263,7 @@ mapPinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     activatePage();
     addressInputField.value = getElementBottom(mapPinMain);
+    addPin(generateAds(8));
   }
 });
 
@@ -268,10 +271,9 @@ mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.key === ENTER_KEY) {
     activatePage();
     addressInputField.value = getElementBottom(mapPinMain);
+    addPin(generateAds(8));
   }
 });
-
-addPin(generateAds(8));
 
 mapPinElement.addEventListener('click', function (evt) {
   closeCard();
