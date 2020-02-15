@@ -2,12 +2,33 @@
 
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+  var cardCloseBtn;
 
   var HousingTypes = {
     palace: 'Дворец',
     house: 'Дом',
     flat: 'Квартира',
     bungalo: 'Бунгало'
+  };
+
+  var closeCard = function () {
+    if (window.map.mapBlock.querySelector('article')) {
+      window.map.mapBlock.querySelector('article').remove();
+    }
+    if (cardCloseBtn) {
+      cardCloseBtn.removeEventListener('click', closeCard);
+    }
+  };
+
+  var addCard = function (marker, arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (marker === arr[i].author.avatar) {
+        var filtersContainerBlock = window.map.mapBlock.querySelector('.map__filters-container');
+        window.map.mapBlock.insertBefore(renderCard(window.util.adsArr[i]), filtersContainerBlock);
+        cardCloseBtn = document.querySelector('.popup__close');
+        cardCloseBtn.addEventListener('click', closeCard);
+      }
+    }
   };
 
   var addFeatures = function (arr, features) {
@@ -50,7 +71,33 @@
     return cardElement;
   };
 
+  window.pin.mapPinElement.addEventListener('click', function (evt) {
+    closeCard();
+    if (evt.target.getAttribute('src')) {
+      addCard(evt.target.getAttribute('src'), window.util.adsArr);
+    } else {
+      addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
+    }
+  });
+
+  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
+    if (evt.key === window.util.Keyboard.ENTER_KEY) {
+      if (evt.target.getAttribute('src')) {
+        addCard(evt.target.getAttribute('src'), window.util.adsArr);
+      } else {
+        addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
+      }
+    }
+  });
+
+  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
+    if (evt.key === window.util.Keyboard.ESC) {
+      closeCard();
+    }
+  });
+
   window.card = {
-    renderCard: renderCard
+    renderCard: renderCard,
+    addCard: addCard
   };
 })();

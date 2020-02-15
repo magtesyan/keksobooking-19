@@ -4,7 +4,7 @@
   var mapPinElement = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('button');
 
-  var renderPin = function (pin) {
+  var createPin = function (pin) {
     var pinElement = pinTemplate.cloneNode(true);
 
     pinElement.style.top = (pin.location.y + 10) + 'px';
@@ -17,7 +17,7 @@
   var addPin = function (arr) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
-      fragment.appendChild(renderPin(arr[i]));
+      fragment.appendChild(createPin(arr[i]));
     }
     mapPinElement.appendChild(fragment);
   };

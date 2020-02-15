@@ -2,7 +2,6 @@
 
 (function () {
   var inputsAndSelects = document.querySelectorAll('input:not(#address), select, .ad-form fieldset');
-  var mapFiltersForm = document.querySelector('.map__filters');
   var adForm = document.querySelector('.ad-form');
   var guestsNumberSelect = adForm.querySelector('#capacity');
   var roomsNumberSelect = adForm.querySelector('#room_number');
@@ -33,33 +32,21 @@
     }
   };
 
-  var disactivatePage = function () {
+  var disactivateForm = function () {
     for (var i = 0; i < inputsAndSelects.length; i++) {
       inputsAndSelects[i].setAttribute('disabled', '');
-    }
-    if (!window.map.mapBlock.classList.contains('map--faded')) {
-      window.map.mapBlock.classList.add('map--faded');
     }
     if (!adForm.classList.contains('ad-form--disabled')) {
       adForm.classList.add('map--faded');
     }
-    if (!mapFiltersForm.classList.contains('map__filters--disabled')) {
-      mapFiltersForm.classList.add('map--faded');
-    }
   };
 
-  var activatePage = function () {
+  var activateForm = function () {
     for (var i = 0; i < inputsAndSelects.length; i++) {
       inputsAndSelects[i].removeAttribute('disabled');
     }
-    if (window.map.mapBlock.classList.contains('map--faded')) {
-      window.map.mapBlock.classList.remove('map--faded');
-    }
     if (adForm.classList.contains('ad-form--disabled')) {
       adForm.classList.remove('ad-form--disabled');
-    }
-    if (mapFiltersForm.classList.contains('map__filters--disabled')) {
-      mapFiltersForm.classList.remove('map__filters--disabled');
     }
   };
 
@@ -96,8 +83,8 @@
   });
 
   window.form = {
-    disactivatePage: disactivatePage,
-    activatePage: activatePage,
+    disactivateForm: disactivateForm,
+    activateForm: activateForm,
     validateRoomsAndGuests: validateRoomsAndGuests,
     adForm: adForm
   };

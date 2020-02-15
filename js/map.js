@@ -2,50 +2,29 @@
 
 (function () {
   var mapBlock = document.querySelector('.map');
+  var mapFiltersForm = document.querySelector('.map__filters');
 
-  var addCard = function (marker, arr) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      if (marker === arr[i].author.avatar) {
-        fragment.appendChild(window.card.renderCard(window.util.adsArr[i]));
-      }
+  var activateMap = function () {
+    if (mapBlock.classList.contains('map--faded')) {
+      mapBlock.classList.remove('map--faded');
     }
-    var filtersContainerBlock = window.map.mapBlock.querySelector('.map__filters-container');
-    window.map.mapBlock.insertBefore(fragment, filtersContainerBlock);
-  };
-
-  var closeCard = function () {
-    if (window.map.mapBlock.querySelector('article')) {
-      window.map.mapBlock.querySelector('article').remove();
+    if (mapFiltersForm.classList.contains('map__filters--disabled')) {
+      mapFiltersForm.classList.remove('map__filters--disabled');
     }
   };
 
-  window.pin.mapPinElement.addEventListener('click', function (evt) {
-    closeCard();
-    if (evt.target.getAttribute('src')) {
-      addCard(evt.target.getAttribute('src'), window.util.adsArr);
-    } else {
-      addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
+  var disactivateMap = function () {
+    if (!mapBlock.classList.contains('map--faded')) {
+      mapBlock.classList.add('map--faded');
     }
-  });
-
-  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
-    if (evt.key === window.util.ENTER_KEY) {
-      if (evt.target.getAttribute('src')) {
-        addCard(evt.target.getAttribute('src'), window.util.adsArr);
-      } else {
-        addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
-      }
+    if (!mapFiltersForm.classList.contains('map__filters--disabled')) {
+      mapFiltersForm.classList.add('map--faded');
     }
-  });
-
-  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
-    if (evt.key === window.util.ESC) {
-      closeCard();
-    }
-  });
+  };
 
   window.map = {
-    mapBlock: mapBlock
+    mapBlock: mapBlock,
+    activateMap: activateMap,
+    disactivateMap: disactivateMap
   };
 })();

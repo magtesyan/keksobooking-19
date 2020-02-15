@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  var ENTER_KEY = 'Enter';
-  var ESC = 'Escape';
+  var Keyboard = {
+    ENTER_KEY: 'Enter',
+    ESC: 'Escape'
+  };
 
   var adsArr = [];
 
@@ -33,8 +35,7 @@
   };
 
   window.util = {
-    ENTER_KEY: ENTER_KEY,
-    ESC: ESC,
+    Keyboard: Keyboard,
     randomDigitFromTo: randomDigitFromTo,
     getElementCenter: getElementCenter,
     getElementBottom: getElementBottom,
