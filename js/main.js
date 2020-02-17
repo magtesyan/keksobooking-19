@@ -1,8 +1,15 @@
 'use strict';
 
+var MAP_TOP = 130;
+var MAP_BOTTOM = 640;
+var MAP_LEFT = 0;
+var MAP_RIGHT = 1134;
+
 var addressInputField = window.form.adForm.querySelector('#address');
 var mapPinMain = window.pin.mapPinElement.querySelector('.map__pin--main');
 var dataGeneratedFlag = false;
+var mapPinMaincoordinates = mapPinMain.getBoundingClientRect();
+var mapPinMainCenter = Math.round((mapPinMaincoordinates.right - mapPinMaincoordinates.left) / 2);
 
 window.map.disactivateMap();
 window.form.disactivateForm();
@@ -42,22 +49,21 @@ mapPinMain.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    if (mapPinMain.offsetTop < 0) {
-      mapPinMain.style.top = '1px';
-    } else if (mapPinMain.offsetTop > 630) {
-      mapPinMain.style.top = '630px';
-    } else {
-      mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+    if (mapPinMain.offsetTop < MAP_TOP) {
+      mapPinMain.style.top = MAP_TOP + 'px';
+    } else if (mapPinMain.offsetTop > MAP_BOTTOM) {
+      mapPinMain.style.top = MAP_BOTTOM + 'px';
     }
 
-    if (mapPinMain.offsetLeft < 0) {
-      mapPinMain.style.left = '1px';
-    } else if (mapPinMain.offsetLeft > 1140) {
-      mapPinMain.style.left = 1140 + 'px';
-    } else {
-      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    if (mapPinMain.offsetLeft < MAP_LEFT - mapPinMainCenter) {
+      mapPinMain.style.left = (MAP_LEFT - mapPinMainCenter) + 'px';
+    } else if (mapPinMain.offsetLeft > MAP_RIGHT + mapPinMainCenter) {
+      mapPinMain.style.left = (MAP_RIGHT + mapPinMainCenter) + 'px';
     }
-    addressInputField.value = window.util.getElementBottom(mapPinMain);
+
+    addressInputField.value = (parseInt(mapPinMain.style.left, 10) + mapPinMainCenter) + ' , ' + parseInt(mapPinMain.style.top, 10);
   };
 
   var onMouseUp = function (upEvt) {
