@@ -20,7 +20,13 @@ mapPinMain.addEventListener('keydown', function (evt) {
     window.map.activateMap();
     window.form.activateForm();
     addressInputField.value = window.util.getElementBottom(mapPinMain);
-    window.pin.addPin(window.data.generateAds(8));
+    var onLoad = function (response) {
+      window.pin.addPin(response);
+      window.util.adsArr = response;
+    };
+
+    window.upload.load(onLoad);
+    dataGeneratedFlag = true;
   }
 });
 
