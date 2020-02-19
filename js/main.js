@@ -25,13 +25,21 @@ mapPinMain.addEventListener('keydown', function (evt) {
 });
 
 mapPinMain.addEventListener('mousedown', function (evt) {
+
   if (evt.button === 0 && dataGeneratedFlag === false) {
     window.map.activateMap();
     window.form.activateForm();
     addressInputField.value = window.util.getElementBottom(mapPinMain);
-    window.pin.addPin(window.data.generateAds(8));
+
+    var onLoad = function (response) {
+      window.pin.addPin(response);
+      window.util.adsArr = response;
+    };
+
+    window.upload.load(onLoad);
     dataGeneratedFlag = true;
   }
+
 
   var startCoords = {
     x: evt.clientX,
