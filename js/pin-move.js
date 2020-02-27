@@ -7,9 +7,16 @@
   var MAP_RIGHT = 1134;
 
   var mapPinMain = window.pin.mapPinElement.querySelector('.map__pin--main');
-  var mapPinMaincoordinates = mapPinMain.getBoundingClientRect();
-  var mapPinMainCenter = Math.round((mapPinMaincoordinates.right - mapPinMaincoordinates.left) / 2);
-  var addressInputField = window.form.adForm.querySelector('#address');
+  var mapPinMainCoordinates = mapPinMain.getBoundingClientRect();
+  var mapPinMainCenter = Math.round((mapPinMainCoordinates.right - mapPinMainCoordinates.left) / 2);
+  var addressInputField = document.querySelector('#address');
+
+  var mapPinStartCoordX = mapPinMain.style.left;
+  var mapPinStartCoordY = mapPinMain.style.top;
+
+  var calcMainPinCoords = function () {
+    return (parseInt(mapPinMain.style.left, 10) + mapPinMainCenter) + ', ' + parseInt(mapPinMain.style.top, 10);
+  };
 
   var pinMove = function (evt) {
     var startCoords = {
@@ -42,7 +49,7 @@
         mapPinMain.style.left = (MAP_RIGHT + mapPinMainCenter) + 'px';
       }
 
-      addressInputField.value = (parseInt(mapPinMain.style.left, 10) + mapPinMainCenter) + ' , ' + parseInt(mapPinMain.style.top, 10);
+      addressInputField.value = calcMainPinCoords();
     };
 
     var onMouseUp = function (upEvt) {
@@ -64,6 +71,10 @@
   window.pinMove = {
     addressInputField: addressInputField,
     mapPinMain: mapPinMain,
-    pinMove: pinMove
+    pinMove: pinMove,
+    mapPinMainCenter: mapPinMainCenter,
+    calcMainPinCoords: calcMainPinCoords,
+    mapPinStartCoordX: mapPinStartCoordX,
+    mapPinStartCoordY: mapPinStartCoordY
   };
 })();

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var inputsAndSelects = document.querySelectorAll('input:not(#address), select, .ad-form fieldset');
+  var inputsAndSelects = document.querySelectorAll('input, select, .ad-form fieldset');
   var adForm = document.querySelector('.ad-form');
   var guestsNumberSelect = adForm.querySelector('#capacity');
   var roomsNumberSelect = adForm.querySelector('#room_number');
@@ -16,6 +16,9 @@
   var guestsNumber = guestsNumberSelect.value;
   var offerType = offerTypeSelect.value;
   var timeIn = timeInSelect.value;
+  var nodeSuccess = document.querySelector('#success').content.querySelector('.success');
+  var nodeFail = document.querySelector('#error').content.querySelector('.error');
+  var resetFormBtn = adForm.querySelector('.ad-form__reset');
 
   var HousingTypesMinPrice = {
     palace: 10000,
@@ -37,8 +40,9 @@
       inputsAndSelects[i].setAttribute('disabled', '');
     }
     if (!adForm.classList.contains('ad-form--disabled')) {
-      adForm.classList.add('map--faded');
+      adForm.classList.add('ad-form--disabled');
     }
+    window.pinMove.addressInputField.readOnly = true;
   };
 
   var activateForm = function () {
@@ -77,10 +81,57 @@
     }
   });
 
+  var addRemoveMsgListeners = function () {
+    addEventListener('click', removeMessage);
+    addEventListener('keydown', function (event) {
+      if (event.key === window.util.Keyboard.ESC) {
+        removeMessage();
+      }
+    });
+  };
+
+  var onError = function (errorMessage) {
+    nodeFail.querySelector('.error__message').textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', nodeFail);
+    addRemoveMsgListeners();
+  };
+
+  var removeMessage = function () {
+    nodeSuccess.remove();
+    nodeFail.remove();
+    removeEventListener('click', removeMessage);
+    removeEventListener('keydown', function (event) {
+      if (event.key === window.util.Keyboard.ESC) {
+        removeMessage();
+      }
+    });
+  };
+
+  var resetForm = function (evt) {
+    evt.preventDefault();
+    adForm.reset();
+    window.pinMove.mapPinMain.style.left = window.pinMove.mapPinStartCoordX;
+    window.pinMove.mapPinMain.style.top = window.pinMove.mapPinStartCoordY;
+    window.pinMove.addressInputField.value = window.pinMove.calcMainPinCoords();
+  };
+
   submitBtn.addEventListener('click', function () {
     validateRoomsAndGuests(roomsNumberSelect, guestsNumberSelect);
     priceSelect.setAttribute('min', HousingTypesMinPrice[offerType]);
   });
+
+  adForm.addEventListener('submit', function (evt) {
+    window.upload.send(new FormData(adForm), function () {
+      document.body.insertAdjacentElement('afterbegin', nodeSuccess);
+      window.map.disactivateMap();
+      resetForm(evt);
+      disactivateForm();
+      addRemoveMsgListeners();
+    }, onError);
+    evt.preventDefault();
+  });
+
+  resetFormBtn.addEventListener('click', resetForm);
 
   window.form = {
     disactivateForm: disactivateForm,
