@@ -113,6 +113,7 @@
     window.pinMove.mapPinMain.style.left = window.pinMove.mapPinStartCoordX;
     window.pinMove.mapPinMain.style.top = window.pinMove.mapPinStartCoordY;
     window.pinMove.addressInputField.value = window.pinMove.calcMainPinCoords();
+    window.pin.clearPins();
   };
 
   submitBtn.addEventListener('click', function () {

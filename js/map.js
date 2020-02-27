@@ -23,7 +23,7 @@
     }
 
     var onLoad = function (response) {
-      window.pin.addPin(response);
+      window.filter.filterPins(response);
       window.util.adsArr = response;
     };
 
