@@ -25,14 +25,14 @@
     return pinElement;
   };
 
-  var addPin = function (arr) {
+  var addPin = window.debounce.debounce(function (arr) {
     clearPins();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < Math.min(5, arr.length); i++) {
       fragment.appendChild(createPin(arr[i]));
     }
     mapPinElement.appendChild(fragment);
-  };
+  });
 
   window.pin = {
     addPin: addPin,
