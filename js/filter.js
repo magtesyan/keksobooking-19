@@ -2,6 +2,9 @@
 
 (function () {
   var FILTER_DEFAULT = 'any';
+  var MID_PRICE = 10000;
+  var HIGH_PRICE = 50000;
+
   var filterForm = document.querySelector('.map__filters');
   var filterHousingType = filterForm.querySelector('#housing-type');
   var filterHousingPrice = filterForm.querySelector('#housing-price');
@@ -24,13 +27,13 @@
           var condition;
           switch (filterHousingPrice.value) {
             case 'low':
-              condition = parseInt(el.offer.price, 10) < 10000;
+              condition = parseInt(el.offer.price, 10) < MID_PRICE;
               break;
             case 'middle':
-              condition = parseInt(el.offer.price, 10) >= 10000 && parseInt(el.offer.price, 10) < 50000;
+              condition = parseInt(el.offer.price, 10) >= MID_PRICE && parseInt(el.offer.price, 10) < HIGH_PRICE;
               break;
             case 'high':
-              condition = parseInt(el.offer.price, 10) >= 50000;
+              condition = parseInt(el.offer.price, 10) >= HIGH_PRICE;
               break;
           }
           return condition;
