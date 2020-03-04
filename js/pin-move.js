@@ -6,6 +6,11 @@
   var MAP_LEFT = 0;
   var MAP_RIGHT = 1134;
 
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+
   var mapPinMain = window.pin.mapPinElement.querySelector('.map__pin--main');
   var mapPinMainCoordinates = mapPinMain.getBoundingClientRect();
   var mapPinMainCenter = Math.round((mapPinMainCoordinates.right - mapPinMainCoordinates.left) / 2);
@@ -19,21 +24,11 @@
   };
 
   var pinMove = function (evt) {
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new Coordinate(evt.clientX, evt.ClientY);
 
     var onMouseMove = function (moveEvt) {
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      var shift = new Coordinate(startCoords.x - moveEvt.clientX, startCoords.y - moveEvt.clientY);
+      startCoords = new Coordinate(moveEvt.clientX, moveEvt.clientY);
 
       mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       if (mapPinMain.offsetTop < MAP_TOP) {

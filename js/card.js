@@ -22,7 +22,7 @@
 
   var addCard = function (marker, arr) {
     for (var i = 0; i < arr.length; i++) {
-      if (marker === arr[i].author.avatar) {
+      if (marker === arr[i].offer.title) {
         var filtersContainerBlock = window.map.mapBlock.querySelector('.map__filters-container');
         window.map.mapBlock.insertBefore(renderCard(window.util.adsArr[i]), filtersContainerBlock);
         cardCloseBtn = document.querySelector('.popup__close');
@@ -73,11 +73,7 @@
 
   window.pin.mapPinElement.addEventListener('click', function (evt) {
     closeCard();
-    if (evt.target.getAttribute('src')) {
-      addCard(evt.target.getAttribute('src'), window.util.adsArr);
-    } else {
-      addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
-    }
+    addCard(evt.target.getAttribute('alt'), window.util.adsArr);
   });
 
   window.pin.mapPinElement.addEventListener('keydown', function (evt) {
