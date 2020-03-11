@@ -2,7 +2,7 @@
 
 (function () {
   var MAP_TOP = 130;
-  var MAP_BOTTOM = 640;
+  var MAP_BOTTOM = 630;
   var MAP_LEFT = 0;
   var MAP_RIGHT = 1134;
 
@@ -11,7 +11,7 @@
     this.y = y;
   };
 
-  var mapPinMain = window.pin.mapPinElement.querySelector('.map__pin--main');
+  var mapPinMain = window.pin.mapMarkElement.querySelector('.map__pin--main');
   var mapPinMainCoordinates = mapPinMain.getBoundingClientRect();
   var mapPinMainCenter = Math.round((mapPinMainCoordinates.right - mapPinMainCoordinates.left) / 2);
   var addressInputField = document.querySelector('#address');
@@ -23,7 +23,7 @@
     return (parseInt(mapPinMain.style.left, 10) + mapPinMainCenter) + ', ' + parseInt(mapPinMain.style.top, 10);
   };
 
-  var pinMove = function (evt) {
+  var onMainPinShift = function (evt) {
     var startCoords = new Coordinate(evt.clientX, evt.ClientY);
 
     var onMouseMove = function (moveEvt) {
@@ -66,7 +66,7 @@
   window.pinMove = {
     addressInputField: addressInputField,
     mapPinMain: mapPinMain,
-    pinMove: pinMove,
+    onMainPinShift: onMainPinShift,
     mapPinMainCenter: mapPinMainCenter,
     calcMainPinCoords: calcMainPinCoords,
     mapPinStartCoordX: mapPinStartCoordX,

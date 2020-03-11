@@ -6,22 +6,8 @@
     ESC: 'Escape'
   };
 
-  var adsArr = [];
-
   var randomDigitFromTo = function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
-  };
-
-  var shuffle = function (arr) {
-    var j;
-    var temp;
-    for (var i = arr.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      temp = arr[j];
-      arr[j] = arr[i];
-      arr[i] = temp;
-    }
-    return arr;
   };
 
   var getElementCenter = function (element) {
@@ -38,8 +24,6 @@
     Keyboard: Keyboard,
     randomDigitFromTo: randomDigitFromTo,
     getElementCenter: getElementCenter,
-    getElementBottom: getElementBottom,
-    shuffle: shuffle,
-    adsArr: adsArr
+    getElementBottom: getElementBottom
   };
 })();

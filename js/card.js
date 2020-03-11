@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var PHOTO_WIDTH = 45;
+  var PHOTO_HEIGHT = 40;
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
   var cardCloseBtn;
 
@@ -11,47 +13,47 @@
     bungalo: 'Бунгало'
   };
 
-  var closeCard = function () {
-    if (window.map.mapBlock.querySelector('article')) {
-      window.map.mapBlock.querySelector('article').remove();
+  var onCardCloseBtnClick = function () {
+    if (window.map.circuit.querySelector('article')) {
+      window.map.circuit.querySelector('article').remove();
     }
     if (cardCloseBtn) {
-      cardCloseBtn.removeEventListener('click', closeCard);
+      cardCloseBtn.removeEventListener('click', onCardCloseBtnClick);
     }
   };
 
   var addCard = function (marker, arr) {
-    for (var i = 0; i < arr.length; i++) {
-      if (marker === arr[i].offer.title) {
-        var filtersContainerBlock = window.map.mapBlock.querySelector('.map__filters-container');
-        window.map.mapBlock.insertBefore(renderCard(window.util.adsArr[i]), filtersContainerBlock);
+    arr.forEach(function (el) {
+      if (marker === el.offer.title) {
+        var filtersContainerBlock = window.map.circuit.querySelector('.map__filters-container');
+        window.map.circuit.insertBefore(renderCard(el), filtersContainerBlock);
         cardCloseBtn = document.querySelector('.popup__close');
-        cardCloseBtn.addEventListener('click', closeCard);
+        cardCloseBtn.addEventListener('click', onCardCloseBtnClick);
       }
-    }
+    });
   };
 
   var addFeatures = function (arr, features) {
     features.innerHTML = '';
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (el) {
       var newChild = document.createElement('li');
       newChild.className = 'popup__feature';
-      newChild.classList.add('popup__feature--' + arr[i]);
+      newChild.classList.add('popup__feature--' + el);
       features.appendChild(newChild);
-    }
+    });
   };
 
   var addPhotos = function (arr, photos) {
     photos.innerHTML = '';
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (el) {
       var newChild = document.createElement('img');
       newChild.className = 'popup__photo';
-      newChild.setAttribute('src', arr[i]);
-      newChild.setAttribute('width', 45);
-      newChild.setAttribute('height', 40);
+      newChild.setAttribute('src', el);
+      newChild.setAttribute('width', PHOTO_WIDTH);
+      newChild.setAttribute('height', PHOTO_HEIGHT);
       newChild.setAttribute('alt', 'Фотография жилья');
       photos.appendChild(newChild);
-    }
+    });
   };
 
   var renderCard = function (arr) {
@@ -71,28 +73,15 @@
     return cardElement;
   };
 
-  window.pin.mapPinElement.addEventListener('click', function (evt) {
-    closeCard();
+  window.pin.mapMarkElement.addEventListener('click', function (evt) {
+    onCardCloseBtnClick();
     addCard(evt.target.getAttribute('alt'), window.util.adsArr);
+    addCard(evt.target.querySelector('img').getAttribute('alt'), window.util.adsArr);
   });
 
-  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
-    if (evt.key === window.util.Keyboard.ENTER_KEY) {
-      if (evt.target.getAttribute('src')) {
-        addCard(evt.target.getAttribute('src'), window.util.adsArr);
-      } else {
-        addCard(evt.target.querySelector('img').getAttribute('src'), window.util.adsArr);
-      }
-    }
-  });
-
-  window.pin.mapPinElement.addEventListener('keydown', function (evt) {
+  document.addEventListener('keydown', function (evt) {
     if (evt.key === window.util.Keyboard.ESC) {
-      closeCard();
+      onCardCloseBtnClick();
     }
   });
-
-  window.card = {
-    renderCard: renderCard
-  };
 })();

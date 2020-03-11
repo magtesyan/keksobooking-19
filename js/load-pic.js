@@ -2,6 +2,7 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var AVATAR_DEFAULT_URL = 'img/muffin-grey.svg';
 
   var picClass = {
     avatar: '.ad-form-header__preview',
@@ -11,7 +12,14 @@
   var fileAvatarChooser = document.querySelector('.ad-form__field input[type=file]');
   var fileHousePicChooser = document.querySelector('.ad-form__upload input[type=file]');
 
-  var loadPicture = function (evt) {
+  var deletePhoto = function () {
+    document.querySelector(picClass['avatar']).querySelector('img').src = AVATAR_DEFAULT_URL;
+    if (document.querySelector(picClass['images']).querySelector('img')) {
+      document.querySelector(picClass['images']).querySelector('img').remove();
+    }
+  };
+
+  var onPictureChange = function (evt) {
     var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
     var previewBlock = document.querySelector(picClass[evt.target.id]);
@@ -37,6 +45,10 @@
     }
   };
 
-  fileAvatarChooser.addEventListener('change', loadPicture);
-  fileHousePicChooser.addEventListener('change', loadPicture);
+  fileAvatarChooser.addEventListener('change', onPictureChange);
+  fileHousePicChooser.addEventListener('change', onPictureChange);
+
+  window.loadPic = {
+    deletePhoto: deletePhoto
+  };
 })();
