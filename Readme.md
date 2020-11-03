@@ -7,4 +7,4 @@
 
 
 [travis-image]: https://travis-ci.com/magtesyan/keksobooking.svg?branch=master
-[travis-url]: https://travis-ci.com/magtesyan/keksobooking-19
+[travis-url]: https://travis-ci.com/magtesyan/keksobooking
