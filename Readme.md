@@ -4,6 +4,7 @@
 * Наставник: [Артём Матковский](https://htmlacademy.ru/profile/id1151767).
 
 ---
+# Сервис для размещения объявлений о сдаче недвижимости
 
 
 [travis-image]: https://travis-ci.com/magtesyan/keksobooking.svg?branch=master
